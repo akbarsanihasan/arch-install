@@ -8,7 +8,7 @@ package() {
     AUDIO="pipewire pipewire-audio pipewire-pulse pipewire-jack pipewire-alsa wireplumber"
     REFLECTOR_PACKAGE="reflector pacman-contrib"
     PLYMOUTH_PACKAGE="plymouth"
-    FS_PACKAGE="ntfs-3g exfatprogs"
+    FS_PACKAGE="ntfs-3g exfatprogs virtiofsd"
     OTHER_PACKAGE="git vim zsh"
 
     if [[ $KRNL == "1" ]]; then
