@@ -2,12 +2,11 @@ grub() {
     clear
     print_color $MAGENTA "Installing grub...\n"
 
-    ROOT_ID=$(blkid -s UUID -o value $ROOT_PARTITION)
-
-    grub-install --target=x86_64-efi --efi-directory=$ESP_MOUNT_POINT --boot-directory=$MOUNT_POINT/boot --bootloader-id=Archlinux
-
     EXISTING_OPTIONS=$(grep "GRUB_CMDLINE_LINUX_DEFAULT" $MOUNT_POINT/etc/default/grub | grep -oP '(?<=\")[^\"]+(?=\")')
     NEW_OPTIONS="GRUB_CMDLINE_LINUX_DEFAULT=\"$EXISTING_OPTIONS splash\""
+    ROOT_ID=$(blkid -s UUID -o value $ROOT_PARTITION)
+
+    grub-install --target=x86_64-efi --efi-directory=$ESP_MOUNT_POINT --boot-directory=$ESP_MOUNT_POINT --bootloader-id=Archlinux
 
     sed -i 's/^GRUB_TIMEOUT=.*$/GRUB_TIMEOUT=5/' $MOUNT_POINT/etc/default/grub
     sed -i 's/^#GRUB_DISABLE_OS_PROBER=/GRUB_DISABLE_OS_PROBER=/' $MOUNT_POINT/etc/default/grub
@@ -24,26 +23,26 @@ grub() {
     echo -e "}" >>$MOUNT_POINT/etc/grub.d/40_custom
 
     # Add efistub for my hackintosh OpenLinuxBoot.efi
-    # mkdir -p $MOUNT_POINT/boot/loader/entries/
-    # echo "title   Archlinux" >"$MOUNT_POINT/boot/loader/entries/archlinux.conf"
-    # echo "linux   /vmlinuz-linux" >>"$MOUNT_POINT/boot/loader/entries/archlinux.conf"
-    # if [[ "$CPU_VENDOR" == "GenuineIntel" ]]; then
-    #     echo "initrd  /intel-ucode.img" >>"$MOUNT_POINT/boot/loader/entries/archlinux.conf"
-    # elif [[ "$CPU_VENDOR" == "AuthenticAMD" ]]; then
-    #     echo "initrd  /amd-ucode.img" >>"$MOUNT_POINT/boot/loader/entries/archlinux.conf"
-    # else
-    #     print_color $YELLOW "Unknown cpu, no microcode installed\n"
-    # fi
+    mkdir -p $ESP_MOUNT_POINT/loader/entries/
+    echo "title   Archlinux" >"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    echo "linux   /vmlinuz-linux" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    if [[ "$CPU_VENDOR" == "GenuineIntel" ]]; then
+        echo "initrd  /intel-ucode.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    elif [[ "$CPU_VENDOR" == "AuthenticAMD" ]]; then
+        echo "initrd  /amd-ucode.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    else
+        print_color $YELLOW "Unknown cpu, no microcode installed\n"
+    fi
 
-    # if [[ $KRNL == "1" ]]; then
-    #     echo "initrd  /initramfs-linux.img" >>"$MOUNT_POINT/boot/loader/entries/archlinux.conf"
-    # elif [[ $KRNL == "2" ]]; then
-    #     echo "initrd  /initramfs-linux-zen.img" >>"$MOUNT_POINT/boot/loader/entries/archlinux.conf"
-    # else
-    #     error "Failed to get kernel"
-    # fi
+    if [[ $KRNL == "1" ]]; then
+        echo "initrd  /initramfs-linux.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    elif [[ $KRNL == "2" ]]; then
+        echo "initrd  /initramfs-linux-zen.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    else
+        error "Failed to get kernel"
+    fi
 
-    # echo "options root=UUID=$ROOT_ID rw log_level=3 quiet splash" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    echo "options root=UUID=$ROOT_ID rw log_level=3 quiet splash" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
 
     success "Grub installed successfully.\n"
     sleep 3
