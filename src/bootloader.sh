@@ -1,4 +1,4 @@
-grub() {
+jrub() {
     clear
     print_color $MAGENTA "Installing grub...\n"
 
@@ -24,22 +24,25 @@ grub() {
 
     # Add efistub for my hackintosh OpenLinuxBoot.efi
     mkdir -p $ESP_MOUNT_POINT/loader/entries/
+
     echo "title   Archlinux" >"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
-    echo "linux   /vmlinuz-linux" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+
+    if [[ $KRNL == "1" ]]; then
+        echo "linux   /vmlinuz-linux" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+        echo "initrd  /initramfs-linux.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    elif [[ $KRNL == "2" ]]; then
+        echo "linux   /vmlinuz-linux-zen" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+        echo "initrd  /initramfs-linux-zen.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+    else
+        error "Failed to get kernel"
+    fi
+
     if [[ "$CPU_VENDOR" == "GenuineIntel" ]]; then
         echo "initrd  /intel-ucode.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
     elif [[ "$CPU_VENDOR" == "AuthenticAMD" ]]; then
         echo "initrd  /amd-ucode.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
     else
         print_color $YELLOW "Unknown cpu, no microcode installed\n"
-    fi
-
-    if [[ $KRNL == "1" ]]; then
-        echo "initrd  /initramfs-linux.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
-    elif [[ $KRNL == "2" ]]; then
-        echo "initrd  /initramfs-linux-zen.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
-    else
-        error "Failed to get kernel"
     fi
 
     echo "options root=UUID=$ROOT_ID rw log_level=3 quiet splash" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
@@ -52,27 +55,28 @@ systemd() {
     clear
     print_color $MAGENTA "Installing systemd boot...\n"
 
-    mkdir -p $MOUNT_POINT/etc/pacman.d/hooks 2>/dev/null
+    ROOT_ID=$(blkid -s UUID -o value $ROOT_PARTITION)
 
     if [ ! -d "$ESP_MOUNT_POINT" ]; then
         error "EFI System Partition (ESP) not found at $ESP_MOUNT_POINT. Adjust the mount point."
         exit 0
     fi
 
-    bootctl --esp-path=$ESP_MOUNT_POINT install || true
+    mkdir -p $MOUNT_POINT/etc/pacman.d/hooks 2>/dev/null
+    bootctl --esp-path=$ESP_MOUNT_POINT install
 
     echo "default archlinux*" >"$ESP_MOUNT_POINT/loader/loader.conf"
     echo "timeout 5" >>"$ESP_MOUNT_POINT/loader/loader.conf"
     echo "console-mode max" >>"$ESP_MOUNT_POINT/loader/loader.conf"
 
-    ROOT_ID=$(blkid -s UUID -o value $ROOT_PARTITION)
-
     echo "title   Archlinux" >"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
 
     if [[ $KRNL == "1" ]]; then
         echo "linux   /vmlinuz-linux" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+        echo "initrd  /initramfs-linux.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
     elif [[ $KRNL == "2" ]]; then
         echo "linux   /vmlinuz-linux-zen" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
+        echo "initrd  /initramfs-linux-zen.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
     else
         error "Failed to get kernel"
     fi
@@ -83,14 +87,6 @@ systemd() {
         echo "initrd  /amd-ucode.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
     else
         print_color $YELLOW "Unknown cpu, no microcode installed\n"
-    fi
-
-    if [[ $KRNL == "1" ]]; then
-        echo "initrd  /initramfs-linux.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
-    elif [[ $KRNL == "2" ]]; then
-        echo "initrd  /initramfs-linux-zen.img" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
-    else
-        error "Failed to get kernel"
     fi
 
     echo "options root=UUID=$ROOT_ID rw log_level=3 quiet splash" >>"$ESP_MOUNT_POINT/loader/entries/archlinux.conf"
