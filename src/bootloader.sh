@@ -1,4 +1,4 @@
-jrub() {
+grub() {
     clear
     print_color $MAGENTA "Installing grub...\n"
 
