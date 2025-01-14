@@ -4,7 +4,7 @@ package() {
     sleep 3
 
     BASE_PACKAGE="base sudo linux-firmware"
-    NETWORK_PACKAGE="networkmanager wpa_supplicant wireless_tools netctl openssh"
+    NETWORK_PACKAGE="networkmanager wpa_supplicant wireless_tools netctl openssh iptables-nft"
     AUDIO="pipewire pipewire-audio pipewire-pulse pipewire-jack pipewire-alsa wireplumber"
     REFLECTOR_PACKAGE="reflector pacman-contrib"
     PLYMOUTH_PACKAGE="plymouth"
