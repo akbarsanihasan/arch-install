@@ -1,4 +1,4 @@
-setting_extra_disk(){
+setting_extra_disk() {
     if [[ ! "$ADD_DISK" =~ [Nn] ]]; then
         for i in ${!EXTRA_DISKS[@]}; do
             clear

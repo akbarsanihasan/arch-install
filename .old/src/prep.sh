@@ -17,7 +17,7 @@ delete_efi_entry() {
     fi
 }
 
-format_partition(){
+format_partition() {
     echo -e
     print_color $MAGENTA "Formatting selected partition...\n"
 
@@ -46,7 +46,7 @@ format_partition(){
     rm -rf $ESP_MOUNT_POINT/{EFI/systemd,EFI/Archlinux,*.img,loader,vmlinuz-*,grub} 2>/dev/null || true
 }
 
-set_mirror(){
+set_mirror() {
     echo -e
     print_color $MAGENTA "Setting pacman and reflector... \n"
 
@@ -57,7 +57,6 @@ set_mirror(){
         --age 12 \
         --protocol https --sort rate \
         --save /etc/pacman.d/mirrorlist
-
 
     if [[ ! -e /etc/pacman.conf.bak ]]; then
         cp /etc/pacman.conf /etc/pacman.conf.bak

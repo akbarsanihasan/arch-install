@@ -1,4 +1,4 @@
-setting_plymouth(){
+setting_plymouth() {
     clear
     print_color $MAGENTA "Setting plymouth...\n"
 
@@ -13,4 +13,3 @@ setting_plymouth(){
     success "Plymouth has been set\n"
     sleep 3
 }
-

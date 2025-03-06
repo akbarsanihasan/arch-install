@@ -42,7 +42,7 @@ separator() {
 }
 
 check_swap() {
-    if [ -f /proc/swaps ] && [ $(wc -l < /proc/swaps) -gt 1 ]; then
+    if [ -f /proc/swaps ] && [ $(wc -l </proc/swaps) -gt 1 ]; then
         return 0
     else
         return 1

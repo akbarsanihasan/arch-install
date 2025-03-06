@@ -25,4 +25,3 @@ efi_partition_prompt() {
         fi
     fi
 }
-
