@@ -10,7 +10,7 @@ source "./lib/prompt.sh"
 source "./menu.sh"
 source "./mirror.sh"
 source "./format_partition.sh"
-source "./package.sh"
+source "./base_system.sh"
 source "./locale.sh"
 source "./network.sh"
 source "./adduser.sh"
@@ -27,13 +27,14 @@ export ROOT_MOUNTPOINT="/mnt"
 export ESP_MOUNTPOINT="$ROOT_MOUNTPOINT/boot"
 
 timezone
+hostname
+root_password
+username
+user_password
 efi_partition
 root_partition
 storage
 swap
-username
-root_password
-user_password
 kernel
 if [[ "${SWAP_METHOD}" -eq "1" ]]; then
     bootloader
@@ -49,7 +50,7 @@ fi
 clear
 setting_mirror
 format_partition
-install_package
+base_system
 setting_locale
 setting_network
 adduser

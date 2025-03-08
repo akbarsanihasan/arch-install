@@ -1,5 +1,6 @@
 export TIMEZONE=""
 
+export HOST_NAME=""
 export USERNAME=""
 export ROOT_PASSWORD=""
 export USER_PASSWORD=""
@@ -21,6 +22,17 @@ export CONFIRM_INSTALL=""
 timezone() {
     echo "Select your timezone: "
     TIMEZONE=$(tzselect -n 10)
+    clear
+}
+
+hostname() {
+    info "Default hostname would be: $(hostnamectl --static)"
+    HOST_NAME=$(input "Enter your hostname")
+
+    if [[ -z "${HOST_NAME}" ]]; then
+        HOST_NAME=$(hostnamectl --static)
+    fi
+
     clear
 }
 
@@ -244,8 +256,9 @@ storage() {
 }
 
 swap_method() {
+    info "This option is optional"
     info "Zram only support GRUB as bootloader"
-    SWAP_METHOD=$(option "Choose swap method [optional]" "Swap" "Zram")
+    SWAP_METHOD=$(option "Choose swap method" "Swap" "Zram")
     clear
 }
 
@@ -346,6 +359,10 @@ summary() {
 
     print_color "${GREEN}" "Timezone: "
     print_color "${WHITE}" "${TIMEZONE}"
+    echo -e
+
+    print_color "${GREEN}" "hostname: "
+    print_color "${WHITE}" "${HOST_NAME}"
     echo -e
 
     print_color "${GREEN}" "User: "

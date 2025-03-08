@@ -1,4 +1,4 @@
-install_package() {
+base_system() {
     clear
     print_color "${MAGENTA}" "Installing packages... \n"
     sleep 3
