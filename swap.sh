@@ -3,7 +3,7 @@ enable_swap() {
     print_color "${MAGENTA}" "Setting Swap...\n"
 
     TOTAL_RAM=$(free -m | awk '/^Mem:/{print $2}')
-    SWAP_SIZE_DEFAULT=8192
+    SWAP_SIZE_DEFAULT=4096
     SWAP_SIZE_HALF=$((TOTAL_RAM / 2))
     SWAP_SIZE=$SWAP_SIZE_DEFAULT
 
@@ -13,12 +13,10 @@ enable_swap() {
     fi
 
     if [[ "${SWAP_PARTITION}" == "/swapfile" ]]; then
-        if [[ ! "$HIBERNATION" =~ [Nn] ]]; then
+        if [[ "$HIBERNATION" =~ [Yy] ]]; then
             SWAP_SIZE=$TOTAL_RAM
-        else
-            if [ $SWAP_SIZE_HALF -lt $SWAP_SIZE_DEFAULT ]; then
-                SWAP_SIZE=$SWAP_SIZE_HALF
-            fi
+        elif [[ $SWAP_SIZE_HALF -lt $SWAP_SIZE_DEFAULT ]]; then
+            SWAP_SIZE=$SWAP_SIZE_HALF
         fi
 
         arch-chroot "${ROOT_MOUNTPOINT}" dd if=/dev/zero of=/swapfile bs=1M count="${SWAP_SIZE}" status=progress
