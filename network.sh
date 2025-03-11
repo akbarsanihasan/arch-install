@@ -7,7 +7,7 @@ setting_network() {
     echo -e "::1 localhost " | tee "${ROOT_MOUNTPOINT}"/etc/hosts &>/dev/null
     echo -e "127.0.0.1 $HOST_NAME" | tee "${ROOT_MOUNTPOINT}"/etc/hosts &>/dev/null
 
-    arch-chroot "${ROOT_MOUNTPOINT}" systemctl enable NetworkManager sshd
+    arch-chroot "${ROOT_MOUNTPOINT}" systemctl enable NetworkManager 
 
     success "setting network\n"
     sleep 3

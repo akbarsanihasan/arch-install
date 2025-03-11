@@ -4,7 +4,7 @@ base_system() {
     sleep 3
 
     BASE_PACKAGE=(base sudo linux-firmware iptables-nft)
-    NETWORK_PACKAGE=(networkmanager wpa_supplicant wireless_tools netctl openssh)
+    NETWORK_PACKAGE=(networkmanager wpa_supplicant wireless_tools netctl)
     AUDIO=(pipewire pipewire-audio pipewire-pulse pipewire-jack pipewire-alsa wireplumber)
     REFLECTOR_PACKAGE=(reflector pacman-contrib)
     FS_PACKAGE=(ntfs-3g exfatprogs virtiofsd)
