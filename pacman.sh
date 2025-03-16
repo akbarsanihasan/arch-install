@@ -2,8 +2,7 @@ setting_pacman() {
     clear
     print_color "${MAGENTA}" "Setting reflector...\n"
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--score 12" | tee /etc/xdg/reflector/reflector.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--age 12" | tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
+    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--score 32" | tee /etc/xdg/reflector/reflector.conf &>/dev/null
     arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--protocol https" | tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
     arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--sort rate" | tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
     arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--save /etc/pacman.d/mirrorlist" | tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
