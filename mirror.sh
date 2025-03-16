@@ -6,7 +6,7 @@ setting_mirror() {
         cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
     fi
 
-    reflector --verbose --score 12 \
+    reflector --verbose --score 32 \
         --protocol https --sort rate \
         --save /etc/pacman.d/mirrorlist
 
