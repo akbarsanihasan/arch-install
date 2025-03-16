@@ -7,7 +7,6 @@ setting_mirror() {
     fi
 
     reflector --verbose --score 12 \
-        --age 12 \
         --protocol https --sort rate \
         --save /etc/pacman.d/mirrorlist
 
