@@ -3,24 +3,19 @@ package() {
     print_color $MAGENTA "Preparing your partition... \n"
     sleep 3
 
-    BASE_PACKAGE="base sudo linux-firmware"
-    NETWORK_PACKAGE="networkmanager wpa_supplicant wireless_tools netctl openssh iptables-nft"
-    AUDIO="pipewire pipewire-audio pipewire-pulse pipewire-jack pipewire-alsa wireplumber"
-    REFLECTOR_PACKAGE="reflector pacman-contrib"
-    PLYMOUTH_PACKAGE="plymouth"
-    FS_PACKAGE="ntfs-3g exfatprogs virtiofsd"
-    OTHER_PACKAGE="git vim zsh"
+    local BASE_PACKAGE="base sudo linux-firmware"
+    local NETWORK_PACKAGE="networkmanager wpa_supplicant wireless_tools netctl openssh iptables-nft"
+    local REFLECTOR_PACKAGE="reflector pacman-contrib"
+    local PLYMOUTH_PACKAGE="plymouth"
+    local FS_PACKAGE="ntfs-3g exfatprogs virtiofsd"
+    local OTHER_PACKAGE="git vim zsh"
 
     if [[ $KRNL == "1" ]]; then
-        KRNL_PACKAGE="linux linux-headers"
+        local KRNL_PACKAGE="linux linux-headers"
     elif [[ $KRNL == "2" ]]; then
-        KRNL_PACKAGE="linux-zen linux-zen-headers"
+        local KRNL_PACKAGE="linux-zen linux-zen-headers"
     else
         error "Failed to get kernel"
-    fi
-
-    if [[ -n "$BLUETOOTH_USB" ]] || [[ -n "$BLUETOOTH_PCI" ]]; then
-        BLUETOOTH_PACAKGE="bluez bluez-utils blueman"
     fi
 
     if [[ $BOOTLOADER == "1" ]]; then
@@ -54,13 +49,7 @@ package() {
         $REFLECTOR_PACKAGE \
         $PLYMOUTH_PACKAGE \
         $FS_PACKAGE \
-        $AUDIO \
-        $BLUETOOTH_PACAKGE \
         $OTHER_PACKAGE
-
-    if [[ -n "$BLUETOOTH_USB" ]] || [[ -n "$BLUETOOTH_PCI" ]]; then
-        arch-chroot $MOUNT_POINT systemctl enable bluetooth
-    fi
 
     success "setting root partition"
     sleep 3
