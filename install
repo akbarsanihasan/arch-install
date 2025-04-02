@@ -61,9 +61,7 @@ install_bootloader
 # setting_hibernation
 
 arch-chroot "${ROOT_MOUNTPOINT}" mkinitcpio -P
-
-echo "# <file system> <dir> <type> <options> <dump> <pass>" | tee "${ROOT_MOUNTPOINT}"/etc/fstab &>/dev/null
-genfstab -t UUID "${ROOT_MOUNTPOINT}" >>"${ROOT_MOUNTPOINT}"/etc/fstab
+setting_storage
 
 clear
 success "Installing arch"
