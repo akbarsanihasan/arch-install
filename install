@@ -16,7 +16,7 @@ source "./network.sh"
 source "./adduser.sh"
 source "./pacman.sh"
 source "./swap.sh"
-source "./storage.sh"
+source "./disk.sh"
 source "./bootloader.sh"
 source "./hibernation.sh"
 

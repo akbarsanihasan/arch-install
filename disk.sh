@@ -13,7 +13,7 @@ setting_storage() {
 
     if [[ "${#EXTRA_STORAGE[@]}" -gt 0 ]]; then
         for i in "${!EXTRA_STORAGE[@]}"; do
-            arch-chroot $ROOT_MOUNTPOINT echo -e "$(get_partinfo "UUID" ${EXTRA_STORAGE[$i]})     ${EXTRA_STORAGE_MOUNTPOINT[$i]}       $(get_partinfo "type" ${EXTRA_STORAGE[$1]})      defaults,uid=$(id -u $USERNAME),uid=$(id -g $USERNAME),nofail      0       0" |
+            arch-chroot $ROOT_MOUNTPOINT echo -e "$(get_partinfo "UUID" ${EXTRA_STORAGE[$i]})     ${EXTRA_STORAGE_MOUNTPOINT[$i]}       $(get_partinfo "type" ${EXTRA_STORAGE[$1]})      defaults,uid=$(arch-chroot ${ROOT_MOUNTPOINT} id -u $USERNAME),gid=$(arch-chroot ${ROOT_MOUNTPOINT} id -g $USERNAME),nofail      0       0" |
                 arch-chroot $ROOT_MOUNTPOINT tee -a /etc/fstab &>/dev/null
         done
     fi
