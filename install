@@ -63,7 +63,7 @@ install_bootloader
 # arch-chroot "${ROOT_MOUNTPOINT}" mkinitcpio -P
 setting_storage
 
-umount -Rlf /mnt
+umount -Rqlf /mnt
 
 clear
 success "Installing arch"
