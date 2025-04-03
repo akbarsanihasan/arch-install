@@ -37,15 +37,15 @@ format_partition() {
     fi
 
     if checkmount "${EFI_PARTITION}" "${ESP_MOUNTPOINT}"; then
-        umount -Rlq "${ESP_MOUNTPOINT}"
+        umount -Rlq "${ESP_MOUNTPOINT}" &>/dev/null
     fi
 
     if checkmount "${EFI_PARTITION}" "${ROOT_MOUNTPOINT}/boot/efi"; then
-        umount -Rlq "${ROOT_MOUNTPOINT}/boot/efi"
+        umount -Rlq "${ROOT_MOUNTPOINT}/boot/efi" &>/dev/null
     fi
 
     if checkmount "${ROOT_PARTITION}" "${ROOT_MOUNTPOINT}"; then
-        umount -Rlq "${ROOT_MOUNTPOINT}"
+        umount -Rlq "${ROOT_MOUNTPOINT}" &>/dev/null
     fi
 
     if ! [[ "$(get_partinfo "type" "${EFI_PARTITION}")" =~ "v?fat$" ]]; then
