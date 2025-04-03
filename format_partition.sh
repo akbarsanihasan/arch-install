@@ -30,23 +30,14 @@ format_partition() {
     print_color "${MAGENTA}" "Formatting selected partition...\n"
 
     if check_swap; then
-        if ! checkmount "${EFI_PARTITION}" "${ESP_MOUNTPOINT}"; then
+        if ! checkmount "${ROOT_PARTITION}" "${ROOT_MOUNTPOINT}"; then
             mount "${ROOT_PARTITION}" "${ROOT_MOUNTPOINT}"
         fi
         arch-chroot "${ROOT_MOUNTPOINT}" swapoff -a || true
     fi
 
-    if checkmount "${EFI_PARTITION}" "${ESP_MOUNTPOINT}"; then
-        umount -Rlqf "${ESP_MOUNTPOINT}" &>/dev/null
-    fi
-
-    if checkmount "${EFI_PARTITION}" "${ROOT_MOUNTPOINT}/boot/efi"; then
-        umount -Rlqf "${ROOT_MOUNTPOINT}/boot/efi" &>/dev/null
-    fi
-
-    if checkmount "${ROOT_PARTITION}" "${ROOT_MOUNTPOINT}"; then
-        umount -Rlqf "${ROOT_MOUNTPOINT}" &>/dev/null
-    fi
+    umount "${ROOT_PARTITION}"
+    umount "${EFI_PARTITION}"
 
     if ! [[ "$(get_partinfo "type" "${EFI_PARTITION}")" =~ "v?fat$" ]]; then
         mkfs.fat -F32 -n EFI "${EFI_PARTITION}"
