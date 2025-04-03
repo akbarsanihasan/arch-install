@@ -60,7 +60,7 @@ setting_storage
 install_bootloader
 # setting_hibernation
 
-arch-chroot "${ROOT_MOUNTPOINT}" mkinitcpio -P
+# arch-chroot "${ROOT_MOUNTPOINT}" mkinitcpio -P
 setting_storage
 
 clear
