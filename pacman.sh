@@ -2,10 +2,20 @@ setting_pacman() {
     clear
     print_color "${MAGENTA}" "Configuring reflector...\n"
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--score 32" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/xdg/reflector/reflector.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--protocol https" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--sort rate" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--save /etc/pacman.d/mirrorlist" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
+    echo -e "--score 32" | tee "${ROOT_MOUNTPOINT}"/xdg/reflector/reflector.conf &>/dev/null
+    echo -e "--protocol https" | tee -a "${ROOT_MOUNTPOINT}"/xdg/reflector/reflector.conf &>/dev/null
+    echo -e "--sort rate" | tee -a "${ROOT_MOUNTPOINT}"/xdg/reflector/reflector.conf &>/dev/null
+    echo -e "--save /pacman.d/mirrorlist" | tee -a "${ROOT_MOUNTPOINT}"/etc/xdg/reflector/reflector.conf &>/dev/null
+
+    echo -e "[Unit]" | tee "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "Description=Refresh Pacman mirrorlist weekly with Reflector.\n" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "[Timer]" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "OnCalendar=weekly" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "Persistent=true" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "AccuracySec=1us" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "RandomizedDelaySec=12h" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "[Install]" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
+    echo -e "WantedBy=timers.target" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer &>/dev/null
 
     arch-chroot "${ROOT_MOUNTPOINT}" systemctl enable reflector.timer
 
@@ -16,16 +26,6 @@ setting_pacman() {
 
     arch-chroot "${ROOT_MOUNTPOINT}" cp /etc/makepkg.conf /etc/makepkg.conf.bak
     arch-chroot "${ROOT_MOUNTPOINT}" sed -i "s/^#MAKEFLAGS=\".*\"/MAKEFLAGS=\"-j\$(nproc)\"/" /etc/makepkg.conf
-
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "[Unit]" | arch-chroot "${ROOT_MOUNTPOINT}" tee /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "Description=Refresh Pacman mirrorlist weekly with Reflector.\n" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "[Timer]" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "OnCalendar=weekly" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "Persistent=true" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "AccuracySec=1us" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "RandomizedDelaySec=12h" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "[Install]" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "WantedBy=timers.target" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
 
     print_color "${GREEN}" "Configuring reflector\n"
     sleep 3

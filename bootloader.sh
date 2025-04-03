@@ -45,15 +45,15 @@ grub() {
     sed -i 's/^#GRUB_DISABLE_OS_PROBER=/GRUB_DISABLE_OS_PROBER=/' "${ROOT_MOUNTPOINT}"/etc/default/grub
     sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT.*|${new_options}|" "${ROOT_MOUNTPOINT}"/etc/default/grub
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "menuentry \"Shutdown\" {" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "	echo \"System shutting down...\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "	halt" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "}" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
+    echo -e "menuentry \"Shutdown\" {" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "	echo \"System shutting down...\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "	halt" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "}" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "menuentry \"Restart\" {" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "	echo \"System restarting...\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "	reboot" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "}" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/grub.d/40_custom &>/dev/null
+    echo -e "menuentry \"Restart\" {" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "	echo \"System restarting...\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "	reboot" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "}" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
 
     arch-chroot "${ROOT_MOUNTPOINT}" grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -78,17 +78,17 @@ systemd() {
     echo -e "console-mode max" | tee -a "${ESP_MOUNTPOINT}/loader/loader.conf" &>/dev/null
     echo -e "default @saved" | tee -a "${ESP_MOUNTPOINT}/loader/loader.conf" &>/dev/null
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "[Trigger]" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "Type = Package" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "Operation = Upgrade" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "Target = systemd" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "[Trigger]" | tee "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "Type = Package" | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "Operation = Upgrade" | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "Target = systemd" | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "" | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "[Action]" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "Description = Gracefully upgrading systemd-boot..." | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "When = PostTransaction" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "Exec = /usr/bin/systemctl restart systemd-boot-update.service" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "[Action]" | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "Description = Gracefully upgrading systemd-boot..." | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "When = PostTransaction" | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
+    echo -e "Exec = /usr/bin/systemctl restart systemd-boot-update.service" | tee -a "${ROOT_MOUNTPOINT}"/etc/pacman.d/hooks/95-systemd-boot.hook &>/dev/null
 
     _add_loaders
 

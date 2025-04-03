@@ -12,20 +12,20 @@ setting_locale() {
     arch-chroot "${ROOT_MOUNTPOINT}" sed -i '/^#en_US.UTF-8/s/^#//' /etc/locale.gen
     arch-chroot "${ROOT_MOUNTPOINT}" sed -i "/^#$ADDITIONAL_LOCALE/s/^#//" /etc/locale.gen
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LANG=\"en_GB.UTF-8\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LANGUAGE=\"en_GB.UTF-8\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_CTYPE=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_COLLATE=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_MESSAGES=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_NAME=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_NUMERIC=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_TIME=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_MONETARY=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_PAPER=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_ADDRESS=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_TELEPHONE=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_MEASUREMENT=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "LC_IDENTIFICATION=\"$ADDITIONAL_LOCALE\"" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/locale.conf &>/dev/null
+    echo -e "LANG=\"en_GB.UTF-8\"" | tee "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LANGUAGE=\"en_GB.UTF-8\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_CTYPE=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_COLLATE=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_MESSAGES=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_NAME=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_NUMERIC=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_TIME=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_MONETARY=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_PAPER=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_ADDRESS=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_TELEPHONE=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_MEASUREMENT=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+    echo -e "LC_IDENTIFICATION=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
     arch-chroot "${ROOT_MOUNTPOINT}" locale-gen
 
     success "Successfully setting locale\n"

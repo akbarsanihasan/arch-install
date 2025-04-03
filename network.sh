@@ -2,13 +2,13 @@ setting_network() {
     clear
     print_color "${MAGENTA}" "Configuring network...\n"
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo "$HOST_NAME" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/hostname &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "127.0.0.1 localhost" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/hosts &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "::1 localhost " | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/hosts &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo -e "127.0.0.1 $HOST_NAME" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/hosts &>/dev/null
+    echo "$HOST_NAME" | tee "${ROOT_MOUNTPOINT}"/etc/hostname &>/dev/null
+    echo -e "127.0.0.1 localhost" | tee "${ROOT_MOUNTPOINT}"/etc/hosts &>/dev/null
+    echo -e "::1 localhost " | tee "${ROOT_MOUNTPOINT}"/etc/hosts &>/dev/null
+    echo -e "127.0.0.1 $HOST_NAME" | tee "${ROOT_MOUNTPOINT}"/etc/hosts &>/dev/null
 
     arch-chroot "${ROOT_MOUNTPOINT}" systemctl enable NetworkManager
 
-    success "Configuring network\n"
+    success "setting network\n"
     sleep 3
 }

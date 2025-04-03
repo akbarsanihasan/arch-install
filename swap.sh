@@ -34,10 +34,10 @@ enable_zram() {
     clear
     print_color "${MAGENTA}" "Configuring zram with zram generator...\n"
 
-    arch-chroot "${ROOT_MOUNTPOINT}" echo "[zram0]" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/systemd/zram-generator.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo "compression-algorithm = zstd" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/systemd/zram-generator.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo "swap-priority=100" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/systemd/zram-generator.conf &>/dev/null
-    arch-chroot "${ROOT_MOUNTPOINT}" echo "nfs-type = swap" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/systemd/zram-generator.conf &>/dev/null
+    echo "[zram0]" | tee "${ROOT_MOUNTPOINT}"/etc/systemd/zram-generator.conf &>/dev/null
+    echo "compression-algorithm = zstd" | tee -a "${ROOT_MOUNTPOINT}"/etc/systemd/zram-generator.conf &>/dev/null
+    echo "swap-priority=100" | tee -a "${ROOT_MOUNTPOINT}"/etc/systemd/zram-generator.conf &>/dev/null
+    echo "nfs-type = swap" | tee -a "${ROOT_MOUNTPOINT}"/etc/systemd/zram-generator.conf &>/dev/null
 
     arch-chroot "${ROOT_MOUNTPOINT}" systemctl daemon-reload
     arch-chroot "${ROOT_MOUNTPOINT}" systemctl start /dev/zram0
