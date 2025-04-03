@@ -57,7 +57,7 @@ grub() {
 
     arch-chroot "${ROOT_MOUNTPOINT}" grub-mkconfig -o /boot/grub/grub.cfg
 
-    success "Grub installed successfully.\n"
+    success "Installing grub.\n"
     sleep 3
 }
 

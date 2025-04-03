@@ -1,6 +1,6 @@
 setting_pacman() {
     clear
-    print_color "${MAGENTA}" "Setting reflector...\n"
+    print_color "${MAGENTA}" "Configuring reflector...\n"
 
     arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--score 32" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/xdg/reflector/reflector.conf &>/dev/null
     arch-chroot "${ROOT_MOUNTPOINT}" echo -e "--protocol https" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/xdg/reflector/reflector.conf &>/dev/null
@@ -27,6 +27,6 @@ setting_pacman() {
     arch-chroot "${ROOT_MOUNTPOINT}" echo -e "[Install]" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
     arch-chroot "${ROOT_MOUNTPOINT}" echo -e "WantedBy=timers.target" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /usr/lib/systemd/system/reflector.timer &>/dev/null
 
-    print_color "${GREEN}" "Reflector has been set \n"
+    print_color "${GREEN}" "Configuring reflector\n"
     sleep 3
 }

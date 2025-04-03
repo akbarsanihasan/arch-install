@@ -1,6 +1,6 @@
 enable_swap() {
     clear
-    print_color "${MAGENTA}" "Setting Swap...\n"
+    print_color "${MAGENTA}" "Configuring Swap...\n"
 
     TOTAL_RAM=$(free -m | awk '/^Mem:/{print $2}')
     SWAP_SIZE_DEFAULT=4096
@@ -32,7 +32,7 @@ enable_swap() {
 
 enable_zram() {
     clear
-    print_color "${MAGENTA}" "Setting zram with zram generator...\n"
+    print_color "${MAGENTA}" "Configuring zram with zram generator...\n"
 
     arch-chroot "${ROOT_MOUNTPOINT}" echo "[zram0]" | arch-chroot "${ROOT_MOUNTPOINT}" tee /etc/systemd/zram-generator.conf &>/dev/null
     arch-chroot "${ROOT_MOUNTPOINT}" echo "compression-algorithm = zstd" | arch-chroot "${ROOT_MOUNTPOINT}" tee -a /etc/systemd/zram-generator.conf &>/dev/null

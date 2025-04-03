@@ -51,7 +51,7 @@ setting_hibernation_systemd() {
 
 setting_hibernation() {
     clear
-    print_color "${MAGENTA}" "Setting hibernation...\n"
+    print_color "${MAGENTA}" "Configuring hibernation...\n"
 
     if [[ ! "${HIBERNATION}" =~ [Nn] ]]; then
         if [[ "${BOOTLOADER}" == "1" ]]; then
@@ -63,6 +63,6 @@ setting_hibernation() {
             error "Bootloader not installed, you won't be able to boot to your Operating System\n"
             sleep 3
         fi
-        success "Setting hibernation\n"
+        success "Configuring hibernation\n"
     fi
 }

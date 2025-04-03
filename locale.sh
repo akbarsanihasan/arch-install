@@ -2,7 +2,7 @@ setting_locale() {
     local ADDITIONAL_LOCALE="id_ID.UTF-8"
 
     clear
-    print_color "${MAGENTA}" "Setting locale and language...\n"
+    print_color "${MAGENTA}" "Configuring locale and language...\n"
 
     ln -sf /usr/share/zoneinfo/"${TIMEZONE}" "${ROOT_MOUNTPOINT}"/etc/localtime
     timedatectl set-ntp true &>/dev/null
