@@ -36,8 +36,8 @@ format_partition() {
         arch-chroot "${ROOT_MOUNTPOINT}" swapoff -a || true
     fi
 
-    umount -Rqf "${ROOT_PARTITION}" || true
-    umount -Rqf "${EFI_PARTITION}" || true
+    umount -Rqf "${ROOT_MOUNTPOINT}" || true
+    umount -Rqf "${ESP_MOUNTPOINT}" || true
 
     if ! [[ "$(get_partinfo "type" "${EFI_PARTITION}")" =~ "v?fat$" ]]; then
         mkfs.fat -F32 -n EFI "${EFI_PARTITION}"
