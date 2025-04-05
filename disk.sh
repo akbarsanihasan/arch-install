@@ -16,8 +16,8 @@ setting_storage() {
         for i in "${!EXTRA_STORAGE[@]}"; do
             extra_dev="${EXTRA_STORAGE[$i]}"
             extra_mountpoint="${EXTRA_STORAGE_MOUNTPOINT[$i]}"
-            extra_uuid=$(get_partinfo "UUID" "$dev")
-            extra_fstype=$(get_partinfo "type" "$dev")
+            extra_uuid=$(get_partinfo "UUID" "$extra_dev")
+            extra_fstype=$(get_partinfo "type" "$extra_dev")
 
             if [[ "$extra_fstype" == "ntfs" || "$extra_fstype" == "exfat" ]]; then
                 uid=$(arch-chroot "$ROOT_MOUNTPOINT" id -u "$USERNAME")
