@@ -48,7 +48,7 @@ format_partition() {
         umount -Rlq "${ROOT_MOUNTPOINT}/boot/efi"
     fi
 
-    if ! [[ "$(get_partinfo "type" "${EFI_PARTITION}")" =~ "v?fat$" ]]; then
+    if ! [[ $(get_partinfo "type" "${EFI_PARTITION}") =~ ^(vfat|fat)$ ]]; then
         mkfs.fat -F32 -n EFI "${EFI_PARTITION}"
     fi
     mkfs.ext4 -F -L Archlinux "${ROOT_PARTITION}"
