@@ -9,7 +9,7 @@ setting_storage() {
     root_type=$(get_partinfo "type" "$ROOT_PARTITION")
 
     echo -e "# <file system> <dir> <type> <options> <dump> <pass>" | tee "${ROOT_MOUNTPOINT}"/etc/fstab &>/dev/null
-    echo -e "UUID=$esp_uuid     ${ESP_MOUNTPOINT}#${ROOT_MOUNTPOINT}       $esp_type      umask=0077      0       1" | tee -a "${ROOT_MOUNTPOINT}"/etc/fstab &>/dev/null
+    echo -e "UUID=$esp_uuid     ${ESP_MOUNTPOINT#${ROOT_MOUNTPOINT}}       $esp_type      umask=0077      0       1" | tee -a "${ROOT_MOUNTPOINT}"/etc/fstab &>/dev/null
     echo -e "UUID=$root_uuid     /     $root_type        errors=remount-ro      0       1" | tee -a "${ROOT_MOUNTPOINT}"/etc/fstab &>/dev/null
 
     if [[ "${#EXTRA_STORAGE[@]}" -gt 0 ]]; then
