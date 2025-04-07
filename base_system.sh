@@ -43,7 +43,10 @@ base_system() {
         SWAP_PACKAGE=(zram-generator)
     fi
 
-    pacstrap "${ROOT_MOUNTPOINT}" \
+    MAX_RETRIES=5
+    RETRY_COUNT=0
+
+    until pacstrap "$ROOT_MOUNTPOINT" \
         "${BASE_PACKAGE[@]}" \
         "${KERNEL_PACKAGE[@]}" \
         "${MICROCODE_PACKAGE[@]}" \
@@ -53,7 +56,19 @@ base_system() {
         "${AUDIO[@]}" \
         "${REFLECTOR_PACKAGE[@]}" \
         "${OTHER_PACKAGE[@]}" \
-        "${BOOTLOADER_PACKAGE[@]}"
+        "${BOOTLOADER_PACKAGE[@]}"; do
+
+        ((RETRY_COUNT++))
+
+        if ((RETRY_COUNT >= MAX_RETRIES)); then
+            echo -e "\e[31m[ERROR]\e[0m Maximum retries reached. Aborting."
+            exit 1
+        fi
+
+        clear
+        warn "pacstrap failed (attempt $RETRY_COUNT/$MAX_RETRIES). Retrying in 5 seconds..."
+        sleep 5
+    done
 
     success "Installing package to root partition"
     sleep 3
