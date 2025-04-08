@@ -25,6 +25,7 @@ setting_storage() {
                 gid=$(arch-chroot "$ROOT_MOUNTPOINT" id -g "$USERNAME")
                 echo -e "UUID=$extra_uuid $extra_mountpoint $extra_fstype defaults,uid=$uid,gid=$gid,nofail 0 0" | tee -a "${ROOT_MOUNTPOINT}"/etc/fstab
             else
+                chown -R "${USERNAME}" "${EXTRA_STORAGE_MOUNTPOINT[$i]}"
                 echo -e "UUID=$extra_uuid $extra_mountpoint $extra_fstype defaults,nofail 0 0" | tee -a "${ROOT_MOUNTPOINT}"/etc/fstab
             fi
         done
