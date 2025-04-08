@@ -2,12 +2,12 @@ setting_pacman() {
     clear
     print_color "${MAGENTA}" "Configuring reflector...\n"
 
-    mkdir -p "${ROOT_MOUNTPOINT}"/xdg/reflector
+    mkdir -p "${ROOT_MOUNTPOINT}"/etc/xdg/reflector
 
-    echo -e "--score 32" | tee "${ROOT_MOUNTPOINT}"/xdg/reflector/reflector.conf
-    echo -e "--protocol https" | tee -a "${ROOT_MOUNTPOINT}"/xdg/reflector/reflector.conf
-    echo -e "--sort rate" | tee -a "${ROOT_MOUNTPOINT}"/xdg/reflector/reflector.conf
-    echo -e "--save /pacman.d/mirrorlist" | tee -a "${ROOT_MOUNTPOINT}"/etc/xdg/reflector/reflector.conf
+    echo -e "--score 32" | tee "${ROOT_MOUNTPOINT}"/etc/xdg/reflector/reflector.conf
+    echo -e "--protocol https" | tee -a "${ROOT_MOUNTPOINT}"/etc/xdg/reflector/reflector.conf
+    echo -e "--sort rate" | tee -a "${ROOT_MOUNTPOINT}"/etc/xdg/reflector/reflector.conf
+    echo -e "--save /etc/pacman.d/mirrorlist" | tee -a "${ROOT_MOUNTPOINT}"/etc/xdg/reflector/reflector.conf
 
     echo -e "[Unit]" | tee "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
     echo -e "Description=Refresh Pacman mirrorlist weekly with Reflector.\n" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
