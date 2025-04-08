@@ -15,7 +15,7 @@ setting_pacman() {
     echo -e "OnCalendar=weekly" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
     echo -e "Persistent=true" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
     echo -e "AccuracySec=1us" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
-    echo -e "RandomizedDelaySec=12h" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
+    echo -e "RandomizedDelaySec=12h\n" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
     echo -e "[Install]" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
     echo -e "WantedBy=timers.target" | tee -a "${ROOT_MOUNTPOINT}"/usr/lib/systemd/system/reflector.timer
 

@@ -26,6 +26,7 @@ setting_locale() {
     echo -e "LC_TELEPHONE=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
     echo -e "LC_MEASUREMENT=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
     echo -e "LC_IDENTIFICATION=\"$ADDITIONAL_LOCALE\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/locale.conf &>/dev/null
+
     arch-chroot "${ROOT_MOUNTPOINT}" locale-gen
 
     success "Successfully setting locale\n"
