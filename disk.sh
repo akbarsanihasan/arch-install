@@ -19,13 +19,13 @@ setting_storage() {
             extra_uuid=$(get_partinfo "UUID" "$extra_dev")
             extra_fstype=$(get_partinfo "type" "$extra_dev")
 
-            mkdir -p $extra_mountpoint
+            arch-chroot "${ROOT_MOUNTPOINT}" mkdir -p $extra_mountpoint
             if [[ "$extra_fstype" == "ntfs" || "$extra_fstype" == "exfat" ]]; then
                 uid=$(arch-chroot "$ROOT_MOUNTPOINT" id -u "$USERNAME")
                 gid=$(arch-chroot "$ROOT_MOUNTPOINT" id -g "$USERNAME")
                 echo -e "UUID=$extra_uuid $extra_mountpoint $extra_fstype defaults,uid=$uid,gid=$gid,nofail 0 0" | tee -a "${ROOT_MOUNTPOINT}"/etc/fstab
             else
-                chown -R "${USERNAME}" "${EXTRA_STORAGE_MOUNTPOINT[$i]}"
+                arch-chroot "${ROOT_MOUNTPOINT}" chown -R "${USERNAME}" "${EXTRA_STORAGE_MOUNTPOINT[$i]}"
                 echo -e "UUID=$extra_uuid $extra_mountpoint $extra_fstype defaults,nofail 0 0" | tee -a "${ROOT_MOUNTPOINT}"/etc/fstab
             fi
         done
