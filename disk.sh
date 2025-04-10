@@ -19,7 +19,7 @@ setting_storage() {
             extra_uuid=$(get_partinfo "UUID" "$extra_dev")
             extra_fstype=$(get_partinfo "type" "$extra_dev")
 
-            arch-chroot "${ROOT_MOUNTPOINT}" mkdir -p $extra_mountpoint
+            mkdir -p "${ROOT_MOUNTPOINT}"/"$extra_mountpoint"
             if [[ "$extra_fstype" == "ntfs" || "$extra_fstype" == "exfat" ]]; then
                 uid=$(arch-chroot "$ROOT_MOUNTPOINT" id -u "$USERNAME")
                 gid=$(arch-chroot "$ROOT_MOUNTPOINT" id -g "$USERNAME")
