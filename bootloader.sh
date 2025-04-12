@@ -45,15 +45,15 @@ grub() {
     sed -i 's/^#GRUB_DISABLE_OS_PROBER=/GRUB_DISABLE_OS_PROBER=/' "${ROOT_MOUNTPOINT}"/etc/default/grub
     sed -i "s|^GRUB_CMDLINE_LINUX_DEFAULT.*|${new_options}|" "${ROOT_MOUNTPOINT}"/etc/default/grub
 
-    echo -e "menuentry \"Shutdown\" {" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
-    echo -e "	echo \"System shutting down...\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
-    echo -e "	halt" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
-    echo -e "}" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "menuentry \"Shutdown\" {" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
+    echo -e "	echo \"System shutting down...\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
+    echo -e "	halt" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
+    echo -e "}" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
 
-    echo -e "menuentry \"Restart\" {" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
-    echo -e "	echo \"System restarting...\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
-    echo -e "	reboot" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
-    echo -e "}" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/40_custom &>/dev/null
+    echo -e "menuentry \"Restart\" {" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
+    echo -e "	echo \"System restarting...\"" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
+    echo -e "	reboot" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
+    echo -e "}" | tee -a "${ROOT_MOUNTPOINT}"/etc/grub.d/69_powermenu
 
     arch-chroot "${ROOT_MOUNTPOINT}" grub-mkconfig -o /boot/grub/grub.cfg
 
