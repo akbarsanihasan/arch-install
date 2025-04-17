@@ -29,7 +29,7 @@ setting_storage() {
 				echo -e "UUID=$extra_uuid $extra_mountpoint $extra_fstype defaults,uid=$uid,gid=$gid,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
 				;;
 			ext4)
-                        arch-chroot "$ROOT_MOUNTPOINT" chown -R "$USERNAME" $extra_mountpoint
+                            arch-chroot "$ROOT_MOUNTPOINT" chown -R "$USERNAME" $extra_mountpoint
 				echo -e "UUID=$extra_uuid $extra_mountpoint $extra_fstype defaults,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
 				;;
 			esac
