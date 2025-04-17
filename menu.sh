@@ -24,7 +24,7 @@ timezone() {
 }
 
 hostname() {
-	local default_hostname=$(awk '{print $1}' /sys/devices/virtual/dmi/id/product_family)
+	local default_hostname=$(hostnamectl | awk '/Hardware Model/{print $3}')
 	info "Default hostname would be: $default_hostname"
 	HOST_NAME=$(input "Enter your hostname")
 
