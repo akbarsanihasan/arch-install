@@ -7,8 +7,6 @@ export USER_PASSWORD=""
 
 export EFI_PARTITION=""
 export ROOT_PARTITION=""
-export EXTRA_STORAGE=()
-export EXTRA_STORAGE_MOUNTPOINT=()
 
 export SWAP_METHOD=""
 export SWAP_PARTITION=""
@@ -26,11 +24,12 @@ timezone() {
 }
 
 hostname() {
-	info "Default hostname would be: $(hostnamectl --static)"
+	local default_hostname=$(awk '{print $1}' /sys/devices/virtual/dmi/id/product_family)
+	info "Default hostname would be: $default_hostname"
 	HOST_NAME=$(input "Enter your hostname")
 
 	if [[ -z "$HOST_NAME" ]]; then
-		HOST_NAME=$(hostnamectl --static)
+		HOST_NAME=$default_hostname
 	fi
 
 	clear
@@ -162,99 +161,6 @@ root_partition() {
 	clear
 }
 
-add_storage() {
-	local partition=""
-	local partition_mountpoint=""
-	local partition_label=""
-	local partition_id=""
-	local add
-
-	list_disk
-	echo -e
-	info "Type the full path e.g., /dev/sda1"
-	info "You can cancel this option 'n' to the input"
-	partition=$(input_noempty "Select extra storage")
-
-	if [[ "$partition" == "n" ]]; then
-		return 0
-	fi
-
-	if ! blkid "$partition" &>/dev/null; then
-		clear
-		error "Cannot get partition. format or check the partition"
-		echo -e
-		add_storage
-		return 0
-	fi
-
-	if [[ "$partition" == "$EFI_PARTITION" ]]; then
-		clear
-		error "Partition has been used for EFI"
-		echo -e
-		add_storage
-		return 0
-	fi
-
-	if [[ "$partition" == "$ROOT_PARTITION" ]]; then
-		clear
-		error "Partition has been used for ROOT"
-		echo -e
-		add_storage
-		return 0
-	fi
-
-	if includes_array "$partition" "${EXTRA_STORAGE[@]}"; then
-		clear
-		error "Partition has been used"
-		echo -e
-		add_storage
-		return 0
-	fi
-
-	partition_label="$(get_partinfo "label" "$partition")"
-	partition_id="$(get_partinfo "uuid" "$partition")"
-
-	if [[ -n "$partition_label" ]]; then
-		partition_mountpoint=$(input "Enter ${partition} mountpoint (default, /media/${partition_label})")
-		partition_mountpoint="/media/${partition_mountpoint:=$partition_label}"
-	elif [[ -n "$partition_id" ]]; then
-		partition_mountpoint=$(input "Enter ${partition} mountpoint (default, /media/${partition_id})")
-		partition_mountpoint="/media/${partition_mountpoint:=$partition_id}"
-	else
-		clear
-		error "Cannot get partition information. format or check the partition"
-		echo -e
-		add_storage
-		return 0
-	fi
-
-	EXTRA_STORAGE+=("$partition")
-	EXTRA_STORAGE_MOUNTPOINT+=("$partition_mountpoint")
-
-	echo -e
-	add=$(input_noempty "Add more partition (y/n)")
-
-	if [[ "$add" =~ [Yy] ]]; then
-		clear
-		add_storage
-	fi
-
-	clear
-}
-
-storage() {
-	local add
-
-	add=$(input "Mount extra storage? (y/n)")
-
-	if [[ "$add" =~ [Yy] ]]; then
-		clear
-		add_storage
-	fi
-
-	clear
-}
-
 swap_method() {
 	info "This option is optional"
 	info "Zram only support GRUB as bootloader"
@@ -331,8 +237,6 @@ swap_partition() {
 }
 
 swap() {
-	swap_method
-
 	if [[ "$SWAP_METHOD" -eq "1" ]]; then
 		swap_partition
 	fi
@@ -391,18 +295,6 @@ summary() {
 
 	print_color "$GREEN" "ROOT Partition: "
 	print_color "$WHITE" "$ROOT_PARTITION"
-	echo -e
-
-	print_color "$GREEN" "Extra Storage: "
-	if (("${#EXTRA_STORAGE[@]}" > 0)); then
-		for storage in "${!EXTRA_STORAGE[@]}"; do
-			echo -e
-			print_color "$WHITE" "${EXTRA_STORAGE[$storage]}"
-			print_color "$WHITE" " -> ${EXTRA_STORAGE_MOUNTPOINT[$storage]}"
-		done
-	else
-		print_color "$WHITE" "No"
-	fi
 	echo -e
 
 	print_color "$GREEN" "Swap Method: "
