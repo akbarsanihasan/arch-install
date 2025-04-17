@@ -2,7 +2,7 @@ setting_storage() {
 	clear
 	print_color "$MAGENTA" "Configuring fstab... \n"
 
-	disks=("$(lsblk -p -l -n -f -o name)")
+	disks=($(lsblk -p -l -n -f -o name))
 	esp_uuid=$(get_partinfo "uuid" "$EFI_PARTITION")
 	esp_type=$(get_partinfo "type" "$EFI_PARTITION")
 
