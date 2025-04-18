@@ -10,7 +10,9 @@ setting_fstab() {
 	root_type=$(get_partinfo "type" "$ROOT_PARTITION")
 
 	echo -e "# <file system> <dir> <type> <options> <dump> <pass>" | tee "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
+	echo -e "# $EFI_PARTITION" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
 	echo -e "UUID=$esp_uuid     ${ESP_MOUNTPOINT#${ROOT_MOUNTPOINT}}       $esp_type      umask=0077      0       1" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
+	echo -e "# $ROOT_PARTITION" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
 	echo -e "UUID=$root_uuid     /     $root_type        errors=remount-ro      0       1" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
 
 	for disk in "${disks[@]}"; do
@@ -47,13 +49,14 @@ setting_fstab() {
 		fi
 
 		mkdir -p "$ROOT_MOUNTPOINT"/"$disk_mountpoint"
+		echo -e "# $disk" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
 		case "$disk_fstype" in
 		ntfs | exfat)
 			echo -e "UUID=$disk_uuid $disk_mountpoint $disk_fstype defaults,uid=$uid,gid=$gid,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
 			;;
 		ext4)
-			arch-chroot "$ROOT_MOUNTPOINT" chown -R "$USERNAME" "$disk_mountpoint"
 			echo -e "UUID=$disk_uuid $disk_mountpoint $disk_fstype defaults,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
+			arch-chroot "$ROOT_MOUNTPOINT" chown -R "$USERNAME" "$disk_mountpoint"
 			;;
 		esac
 	done
