@@ -1,17 +1,3 @@
-is_usb_device() {
-	local dev="$1"
-
-	if [[ "$dev" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]; then
-		dev="${dev%p[0-9]*}"
-	else
-		dev="${dev%%[0-9]*}"
-	fi
-
-	udevadm info --query=property --name="/dev/$dev" | grep -q '^ID_BUS=usb'
-
-	return $?
-}
-
 setting_storage() {
 	clear
 	print_color "$MAGENTA" "Configuring fstab... \n"
@@ -28,6 +14,7 @@ setting_storage() {
 	echo -e "UUID=$root_uuid     /     $root_type        errors=remount-ro      0       1" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
 
 	for extra_disk_part in "${disks[@]}"; do
+		local dev=$extra_disk_part
 		local extra_type=$(get_partinfo "type" "$extra_disk_part")
 		local extra_uuid=$(get_partinfo "uuid" "$extra_disk_part")
 		local extra_label=$(get_partinfo "label" "$extra_disk_part")
@@ -39,7 +26,14 @@ setting_storage() {
 			extra_mountpoint="/media/$extra_uuid"
 		fi
 
-		echo "dev: $extra_disk_part"
+		if [[ "$dev" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]; then
+			dev="${dev%p[0-9]*}"
+		else
+			dev="${dev%%[0-9]*}"
+		fi
+
+		echo "dev: $dev"
+		echo "diskpart: $extra_disk_part"
 		echo "type: $extra_type"
 		echo "uuid: $extra_uuid"
 		echo "label: $extra_label"
@@ -47,13 +41,23 @@ setting_storage() {
 		echo "is_usb: $(is_usb_device "$extra_disk_part")"
 		echo -e "\n"
 
-		if [[ -n $extra_type ]] &&
-			[[ $extra_disk_part != "$EFI_PARTITION" ]] &&
-			[[ $extra_disk_part != "$EFI_PARTITION" ]] &&
-			[[ $extra_disk_part != "$ROOT_PARTITION" ]] &&
-			([[ $extra_disk_part =~ [0-9]$ ]] || [[ "$extra_disk_part" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]) &&
-			! is_usb_device "$extra_disk_part"; then
+		if udevadm info --query=property --name="$dev" | grep -q '^ID_BUS=usb'; then
+			continue
+		fi
 
+		if [[ $extra_disk_part != "$EFI_PARTITION" ]]; then
+			continue
+		fi
+
+		if [[ $extra_disk_part != "$ROOT_PARTITION" ]]; then
+			continue
+		fi
+
+		if [[ $extra_disk_part != "$SWAP_PARTITION" ]]; then
+			continue
+		fi
+
+		if [[ -n $extra_type ]]; then
 			mkdir -p "$ROOT_MOUNTPOINT"/"$extra_mountpoint"
 
 			case "$extra_type" in
