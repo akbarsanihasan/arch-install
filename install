@@ -58,10 +58,8 @@ setting_pacman
 setting_swap
 setting_storage
 install_bootloader
-# setting_hibernation
-
-# arch-chroot "${ROOT_MOUNTPOINT}" mkinitcpio -P
 setting_storage
+# setting_hibernation
 
 umount -Rqlf /mnt
 

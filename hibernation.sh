@@ -52,6 +52,8 @@ setting_hibernation() {
 			error "Bootloader not installed, you won't be able to boot to your Operating System\n"
 			sleep 3
 		fi
+
+		arch-chroot "$ROOT_MOUNTPOINT" mkinitcpio -P
 		success "Configuring hibernation\n"
 	fi
 }
