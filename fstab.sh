@@ -13,54 +13,58 @@ setting_fstab() {
 	echo -e "UUID=$esp_uuid     ${ESP_MOUNTPOINT#${ROOT_MOUNTPOINT}}       $esp_type      umask=0077      0       1" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
 	echo -e "UUID=$root_uuid     /     $root_type        errors=remount-ro      0       1" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab &>/dev/null
 
-	for extra_disk_part in "${disks[@]}"; do
+	for disk in "${disks[@]}"; do
 		uid=$(arch-chroot "$ROOT_MOUNTPOINT" id -u "$USERNAME")
 		gid=$(arch-chroot "$ROOT_MOUNTPOINT" id -g "$USERNAME")
 
-		device=$extra_disk_part
-		extra_type=$(get_partinfo "type" "$extra_disk_part")
-		extra_uuid=$(get_partinfo "uuid" "$extra_disk_part")
-		extra_label=$(get_partinfo "label" "$extra_disk_part")
-		extra_mountpoint="/media/$extra_label"
+		device=$disk
+		disk_fstype=$(get_partinfo "type" "$disk")
+		disk_uuid=$(get_partinfo "uuid" "$disk")
+		disk_label=$(get_partinfo "label" "$disk")
+		disk_mountpoint="/media/$disk_label"
 
-		if [[ -z $extra_label ]]; then
-			extra_mountpoint="/media/$extra_uuid"
+		if [[ -z $disk_label ]]; then
+			disk_mountpoint="/media/$disk_uuid"
 		fi
 
-		if [[ "$dev" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]; then
-			dev="${dev%p[0-9]*}"
+		if [[ "$device" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]; then
+			device="${device%p[0-9]*}"
 		else
-			dev="${dev%%[0-9]*}"
+			device="${device%%[0-9]*}"
 		fi
 
-		if [[ -z $extra_type ]]; then
+		if ! udevadm info --query=property --name="$device"; then
 			continue
 		fi
 
-		if [[ $extra_disk_part == "$EFI_PARTITION" ]]; then
+		if udevadm info --query=property --name="$device" | grep -q '^ID_BUS=usb' &>/dev/null; then
 			continue
 		fi
 
-		if [[ $extra_disk_part == "$ROOT_PARTITION" ]]; then
+		if [[ -z $disk_fstype ]]; then
 			continue
 		fi
 
-		if [[ $extra_disk_part == "$SWAP_PARTITION" ]]; then
+		if [[ $disk == "$EFI_PARTITION" ]]; then
 			continue
 		fi
 
-		if udevadm info --query=property --name="$dev" | grep -q '^ID_BUS=usb'; then
+		if [[ $disk == "$ROOT_PARTITION" ]]; then
 			continue
 		fi
 
-		mkdir -p "$ROOT_MOUNTPOINT"/"$extra_mountpoint"
-		case "$extra_type" in
+		if [[ $disk == "$SWAP_PARTITION" ]]; then
+			continue
+		fi
+
+		mkdir -p "$ROOT_MOUNTPOINT"/"$disk_mountpoint"
+		case "$disk_fstype" in
 		ntfs | exfat)
-			echo -e "UUID=$extra_uuid $extra_mountpoint $extra_type defaults,uid=$uid,gid=$gid,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
+			echo -e "UUID=$disk_uuid $disk_mountpoint $disk_fstype defaults,uid=$uid,gid=$gid,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
 			;;
 		ext4)
-			arch-chroot "$ROOT_MOUNTPOINT" chown -R "$USERNAME" "$extra_mountpoint"
-			echo -e "UUID=$extra_uuid $extra_mountpoint $extra_type defaults,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
+			arch-chroot "$ROOT_MOUNTPOINT" chown -R "$USERNAME" "$disk_mountpoint"
+			echo -e "UUID=$disk_uuid $disk_mountpoint $disk_fstype defaults,nofail 0 0" | tee -a "$ROOT_MOUNTPOINT"/etc/fstab
 			;;
 		esac
 	done

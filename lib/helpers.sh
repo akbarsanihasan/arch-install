@@ -6,6 +6,11 @@ get_partinfo() {
 	local info
 	info=$(echo "$1" | tr "[:lower:]" "[:upper:]")
 
+	if ! blkid -s "$info" -o value "$2"; then
+		echo ""
+		return 0
+	fi
+
 	blkid -s "$info" -o value "$2"
 }
 
