@@ -44,8 +44,15 @@ setting_storage() {
 			[[ "$extra_disk_part" != "$EFI_PARTITION" ]] &&
 			[[ "$extra_disk_part" != "$ROOT_PARTITION" ]] &&
 			! is_usb_device "$extra_disk_part" &&
-			[[ "$extra_disk_part" =~ [0-9]$ ]] ||
-			[[ "$extra_disk_part" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]; then
+			([[ "$extra_disk_part" =~ [0-9]$ ]] || [[ "$extra_disk_part" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]); then
+
+			echo "dev: $extra_disk_part"
+			echo "type: $extra_type"
+			echo "uuid: $extra_uuid"
+			echo "label: $extra_label"
+			echo "mount_point: $extra_mountpoint"
+			echo "is_usb: $(is_usb_device "$extra_disk_part")"
+			echo -e "\n"
 
 			mkdir -p "$ROOT_MOUNTPOINT"/"$extra_mountpoint"
 
@@ -60,6 +67,8 @@ setting_storage() {
 			esac
 		fi
 	done
+
+	exit 1
 
 	if [[ $SWAP_METHOD == "1" ]]; then
 		if [[ "$SWAP_PARTITION" == "/swapfile" ]]; then
