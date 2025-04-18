@@ -39,20 +39,20 @@ setting_storage() {
 			extra_mountpoint="/media/$extra_uuid"
 		fi
 
-		if [[ -n "$extra_type" ]] &&
-			[[ "$extra_disk_part" != "$EFI_PARTITION" ]] &&
-			[[ "$extra_disk_part" != "$EFI_PARTITION" ]] &&
-			[[ "$extra_disk_part" != "$ROOT_PARTITION" ]] &&
-			! is_usb_device "$extra_disk_part" &&
-			([[ "$extra_disk_part" =~ [0-9]$ ]] || [[ "$extra_disk_part" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]); then
+		echo "dev: $extra_disk_part"
+		echo "type: $extra_type"
+		echo "uuid: $extra_uuid"
+		echo "label: $extra_label"
+		echo "mount_point: $extra_mountpoint"
+		echo "is_usb: $(is_usb_device "$extra_disk_part")"
+		echo -e "\n"
 
-			echo "dev: $extra_disk_part"
-			echo "type: $extra_type"
-			echo "uuid: $extra_uuid"
-			echo "label: $extra_label"
-			echo "mount_point: $extra_mountpoint"
-			echo "is_usb: $(is_usb_device "$extra_disk_part")"
-			echo -e "\n"
+		if [[ -n $extra_type ]] &&
+			[[ $extra_disk_part != "$EFI_PARTITION" ]] &&
+			[[ $extra_disk_part != "$EFI_PARTITION" ]] &&
+			[[ $extra_disk_part != "$ROOT_PARTITION" ]] &&
+			([[ $extra_disk_part =~ [0-9]$ ]] || [[ "$extra_disk_part" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]) &&
+			! is_usb_device "$extra_disk_part"; then
 
 			mkdir -p "$ROOT_MOUNTPOINT"/"$extra_mountpoint"
 
