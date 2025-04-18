@@ -2,7 +2,7 @@ setting_fstab() {
 	clear
 	print_color "$MAGENTA" "Configuring fstab... \n"
 
-	disks=("$(lsblk -p -l -n -f -o name)")
+	mapfile -t disks < <(lsblk -pnr -o NAME,TYPE | awk '$2 == "part" { print $1 }')
 	esp_uuid=$(get_partinfo "uuid" "$EFI_PARTITION")
 	esp_type=$(get_partinfo "type" "$EFI_PARTITION")
 
@@ -17,7 +17,6 @@ setting_fstab() {
 		uid=$(arch-chroot "$ROOT_MOUNTPOINT" id -u "$USERNAME")
 		gid=$(arch-chroot "$ROOT_MOUNTPOINT" id -g "$USERNAME")
 
-		device=$disk
 		disk_fstype=$(get_partinfo "type" "$disk")
 		disk_uuid=$(get_partinfo "uuid" "$disk")
 		disk_label=$(get_partinfo "label" "$disk")
@@ -25,20 +24,6 @@ setting_fstab() {
 
 		if [[ -z $disk_label ]]; then
 			disk_mountpoint="/media/$disk_uuid"
-		fi
-
-		if [[ "$device" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]; then
-			device="${device%p[0-9]*}"
-		else
-			device="${device%%[0-9]*}"
-		fi
-
-		if ! udevadm info --query=property --name="$device"; then
-			continue
-		fi
-
-		if udevadm info --query=property --name="$device" | grep -q '^ID_BUS=usb' &>/dev/null; then
-			continue
 		fi
 
 		if [[ -z $disk_fstype ]]; then
@@ -54,6 +39,10 @@ setting_fstab() {
 		fi
 
 		if [[ $disk == "$SWAP_PARTITION" ]]; then
+			continue
+		fi
+
+		if udevadm info --query=property --name="$disk" | grep -q '^ID_BUS=usb' &>/dev/null; then
 			continue
 		fi
 
