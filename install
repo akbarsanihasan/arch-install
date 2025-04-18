@@ -16,7 +16,7 @@ source "./network.sh"
 source "./adduser.sh"
 source "./pacman.sh"
 source "./swap.sh"
-source "./disk.sh"
+source "./fstab.sh"
 source "./bootloader.sh"
 source "./hibernation.sh"
 
@@ -56,9 +56,8 @@ setting_network
 adduser
 setting_pacman
 setting_swap
-setting_storage
+setting_fstab
 install_bootloader
-setting_storage
 # setting_hibernation
 
 umount -Rqlf /mnt

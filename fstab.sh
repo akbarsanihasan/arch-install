@@ -1,4 +1,4 @@
-setting_storage() {
+setting_fstab() {
 	clear
 	print_color "$MAGENTA" "Configuring fstab... \n"
 
