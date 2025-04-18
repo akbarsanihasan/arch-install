@@ -53,14 +53,6 @@ setting_fstab() {
 			continue
 		fi
 
-		echo "dev: $dev"
-		echo "diskpart: $extra_disk_part"
-		echo "type: $extra_type"
-		echo "uuid: $extra_uuid"
-		echo "label: $extra_label"
-		echo "mount_point: $extra_mountpoint"
-		echo -e "\n"
-
 		mkdir -p "$ROOT_MOUNTPOINT"/"$extra_mountpoint"
 		case "$extra_type" in
 		ntfs | exfat)
