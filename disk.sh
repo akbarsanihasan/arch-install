@@ -43,9 +43,9 @@ setting_storage() {
 			[[ "$extra_disk_part" != "$EFI_PARTITION" ]] &&
 			[[ "$extra_disk_part" != "$EFI_PARTITION" ]] &&
 			[[ "$extra_disk_part" != "$ROOT_PARTITION" ]] &&
-			! [[ "$extra_disk_part" =~ [0-9]$ ]] &&
-			! [[ "$extra_disk_part" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]] &&
-			! is_usb_device "$extra_disk_part"; then
+			! is_usb_device "$extra_disk_part" &&
+			[[ "$extra_disk_part" =~ [0-9]$ ]] ||
+			[[ "$extra_disk_part" =~ ^nvme[0-9]+n[0-9]+p[0-9]+$ ]]; then
 
 			mkdir -p "$ROOT_MOUNTPOINT"/"$extra_mountpoint"
 
