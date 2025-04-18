@@ -58,8 +58,6 @@ setting_fstab() {
 		esac
 	done
 
-	exit 1
-
 	if [[ $SWAP_METHOD == "1" ]]; then
 		if [[ "$SWAP_PARTITION" == "/swapfile" ]]; then
 			echo -e "/swapfile     none        swap        defaults        0       0" |
